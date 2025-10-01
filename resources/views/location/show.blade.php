@@ -1,4 +1,9 @@
-<x-layout>
+<x-layout
+    :title="$location->name . ' - ' . config('app.name')"
+    :description="$location->short_description"
+    :image="$location->image_path ? Storage::url($location->image_path) : null"
+    ogType="place"
+>
 <div class="max-w-7xl mx-auto mt-10">
     <div class="flex justify-between items-center">
         <h1 class="font-display text-6xl text-truffle-trouble">{{ $location->name }}</h1>
