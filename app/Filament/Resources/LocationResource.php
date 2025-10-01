@@ -62,7 +62,8 @@ final class LocationResource extends Resource
                             ])->columns(2),
                         Section::make('Descriptions')
                             ->schema([
-                                TextInput::make('short_description'),
+                                TextInput::make('short_description')
+                                    ->required(),
                                 RichEditor::make('description'),
                             ]),
                         Section::make('Address')
@@ -72,7 +73,8 @@ final class LocationResource extends Resource
                                 TextInput::make('city'),
                                 Select::make('state')
                                     ->options(State::class),
-                                TextInput::make('country'),
+                                TextInput::make('zip')
+                                    ->label('Zip Code'),
                             ])
                             ->columns(3),
                     ])->columnSpan(2),
@@ -125,6 +127,7 @@ final class LocationResource extends Resource
                                 FileUpload::make('image_path')
                                     ->label('Feature Image')
                                     ->image()
+                                    ->disk('public')
                                     ->directory('location-images'),
                             ]),
                     ]),

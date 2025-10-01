@@ -1,4 +1,5 @@
 <x-layout>
-    <h1 class="text-red-500 font-display text-2xl">Test</h1>
-    <p>This is a sentence</p>
+    <div class="max-w-7xl mx-auto mt-10">
+        <livewire:location-index />
+    </div>
 </x-layout>
