@@ -105,6 +105,21 @@ final class LocationResource extends Resource
                                     ->url()
                                     ->label('Directions URL'),
                             ]),
+                        Section::make('Categories')
+                            ->schema([
+                                Select::make('categories')
+                                    ->relationship('categories', 'name')
+                                    ->multiple()
+                                    ->preload()
+                                    ->createOptionForm([
+                                        TextInput::make('name')
+                                            ->required()
+                                            ->live(onBlur: true)
+                                            ->afterStateUpdated(fn (Set $set, ?string $state): mixed => $set('slug', Str::slug($state))),
+                                        TextInput::make('slug')
+                                            ->required(),
+                                    ]),
+                            ]),
                         Section::make()
                             ->schema([
                                 FileUpload::make('image_path')
