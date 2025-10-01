@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 final class Location extends Model
@@ -27,6 +28,11 @@ final class Location extends Model
         'image_path',
         'status',
     ];
+
+    public function categories(): BelongsToMany
+    {
+        return $this->belongsToMany(LocationCategory::class);
+    }
 
     protected function casts(): array
     {
