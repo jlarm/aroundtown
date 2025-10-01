@@ -59,7 +59,7 @@ enum State: string implements HasLabel
     case WISCONSIN = 'WI';
     case WYOMING = 'WY';
 
-    public function getLabel(): ?string
+    public function getLabel(): string
     {
         return match ($this) {
             self::ALABAMA => 'Alabama',
