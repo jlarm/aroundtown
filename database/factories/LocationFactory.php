@@ -30,7 +30,7 @@ final class LocationFactory extends Factory
             'city' => fake()->city(),
             'state' => fake()->randomElement(State::cases()),
             'zip' => fake()->postcode(),
-            'phone' => fake()->phoneNumber(),
+            'phone' => fake()->numerify('###-###-####'),
             'url' => fake()->url(),
             'menu_url' => fake()->url(),
             'directions_url' => fake()->url(),
