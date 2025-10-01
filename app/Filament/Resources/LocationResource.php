@@ -86,6 +86,13 @@ final class LocationResource extends Resource
                                     ->default(false)
                                     ->grouped(),
                             ]),
+                        Section::make()
+                            ->schema([
+                                TextInput::make('phone')
+                                    ->label('Phone Number')
+                                    ->mask('999-999-9999')
+                                    ->tel(),
+                            ]),
                         Section::make('Links')
                             ->schema([
                                 TextInput::make('url')
@@ -116,10 +123,6 @@ final class LocationResource extends Resource
                 TextColumn::make('name')
                     ->searchable()
                     ->sortable(),
-
-                TextColumn::make('city'),
-
-                TextColumn::make('state'),
 
                 ToggleColumn::make('status'),
             ])
