@@ -1,24 +1,29 @@
-<div class="space-y-8">
-    <div class="flex flex-wrap gap-3">
+<div class="space-y-8" x-data="{ loading: false }">
+    <div class="flex flex-wrap gap-3" x-on:click="loading = true" wire:loading.class="opacity-50" wire:target="filterByCategory">
         <flux:button
             wire:click="filterByCategory(null)"
-            :variant="$category === null ? 'filled' : 'ghost'"
+            variant="{{ $category === null ? 'filled' : 'ghost' }}"
         >
             All Locations
         </flux:button>
         @foreach($categories as $cat)
             <flux:button
-                wire:click="filterByCategory({{ $cat->id }})"
-                :variant="$category === $cat->id ? 'filled' : 'ghost'"
+                wire:click="filterByCategory('{{ $cat->slug }}')"
+                variant="{{ $category === $cat->slug ? 'filled' : 'ghost' }}"
             >
                 {{ $cat->name }} ({{ $cat->locations_count }})
             </flux:button>
         @endforeach
     </div>
 
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-5 transition-opacity duration-300" wire:loading.class="opacity-0" wire:target="filterByCategory">
         @forelse($locations as $location)
-            <a wire:navigate.hover href="{{ route('location.show', $location) }}" class="space-y-3 rounded-2xl p-5 hover:bg-gray-50 hover:cursor-pointer">
+            <a
+                wire:navigate.hover
+                href="{{ route('location.show', $location) }}"
+                class="space-y-3 rounded-2xl p-5 hover:bg-gray-50 hover:cursor-pointer transition-all duration-200 hover:scale-[1.02]"
+                wire:key="location-{{ $location->id }}"
+            >
                 @if($location->image_path)
                     <picture>
                         <source srcset="{{ Storage::url($location->webp_image_path) }}" type="image/webp">

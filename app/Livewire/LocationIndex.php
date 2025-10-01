@@ -13,7 +13,7 @@ use Livewire\Component;
 final class LocationIndex extends Component
 {
     #[Url]
-    public ?int $category = null;
+    public ?string $category = null;
 
     public function render(): View
     {
@@ -27,9 +27,9 @@ final class LocationIndex extends Component
             ->whereStatus(true)
             ->with('categories');
 
-        if ($this->category !== null && $this->category !== 0) {
+        if ($this->category !== null && $this->category !== '' && $this->category !== '0') {
             $locationsQuery->whereHas('categories', function ($query): void {
-                $query->where('location_category_id', $this->category);
+                $query->where('location_categories.slug', $this->category);
             });
         }
 
@@ -39,8 +39,8 @@ final class LocationIndex extends Component
         ]);
     }
 
-    public function filterByCategory(?int $categoryId): void
+    public function filterByCategory(?string $categorySlug): void
     {
-        $this->category = $categoryId;
+        $this->category = $categorySlug;
     }
 }
