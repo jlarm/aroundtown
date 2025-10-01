@@ -4,7 +4,9 @@ declare(strict_types=1);
 
 namespace App\Enums;
 
-enum State: string
+use Filament\Support\Contracts\HasLabel;
+
+enum State: string implements HasLabel
 {
     case ALABAMA = 'AL';
     case ALASKA = 'AK';
@@ -57,7 +59,7 @@ enum State: string
     case WISCONSIN = 'WI';
     case WYOMING = 'WY';
 
-    public function label(): string
+    public function getLabel(): ?string
     {
         return match ($this) {
             self::ALABAMA => 'Alabama',

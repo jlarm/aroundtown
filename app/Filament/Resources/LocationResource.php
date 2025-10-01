@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Filament\Resources;
 
+use App\Enums\State;
 use App\Filament\Resources\LocationResource\Pages;
 use App\Models\Location;
 use BackedEnum;
@@ -15,14 +16,19 @@ use Filament\Actions\ForceDeleteAction;
 use Filament\Actions\ForceDeleteBulkAction;
 use Filament\Actions\RestoreAction;
 use Filament\Actions\RestoreBulkAction;
-use Filament\Forms\Components\Checkbox;
+use Filament\Forms\Components\FileUpload;
+use Filament\Forms\Components\RichEditor;
+use Filament\Forms\Components\Select;
 use Filament\Forms\Components\TextInput;
-use Filament\Infolists\Components\TextEntry;
+use Filament\Forms\Components\ToggleButtons;
 use Filament\Resources\Resource;
+use Filament\Schemas\Components\Group;
+use Filament\Schemas\Components\Section;
+use Filament\Schemas\Components\Utilities\Set;
 use Filament\Schemas\Schema;
 use Filament\Support\Icons\Heroicon;
-use Filament\Tables\Columns\ImageColumn;
 use Filament\Tables\Columns\TextColumn;
+use Filament\Tables\Columns\ToggleColumn;
 use Filament\Tables\Filters\TrashedFilter;
 use Filament\Tables\Table;
 use Illuminate\Database\Eloquent\Builder;
@@ -41,52 +47,66 @@ final class LocationResource extends Resource
     {
         return $schema
             ->components([
-                TextInput::make('name')
-                    ->required()
-                    ->reactive()
-                    ->afterStateUpdated(fn ($state, callable $set) => $set('slug', Str::slug($state))),
+                Group::make()
+                    ->schema([
+                        Section::make()
+                            ->schema([
+                                TextInput::make('name')
+                                    ->required()
+                                    ->live(onBlur: true)
+                                    ->afterStateUpdated(fn (Set $set, ?string $state): mixed => $set('slug', Str::slug($state))),
 
-                TextInput::make('slug')
-                    ->disabled()
-                    ->required()
-                    ->unique(Location::class, 'slug', fn ($record) => $record),
-
-                TextInput::make('short_description')
-                    ->required(),
-
-                TextInput::make('description'),
-
-                TextInput::make('address'),
-
-                TextInput::make('city'),
-
-                TextInput::make('state'),
-
-                TextInput::make('zip'),
-
-                TextInput::make('phone'),
-
-                TextInput::make('url')
-                    ->url(),
-
-                TextInput::make('menu_url')
-                    ->url(),
-
-                TextInput::make('directions_url')
-                    ->url(),
-
-                TextInput::make('image_path'),
-
-                Checkbox::make('status'),
-
-                TextEntry::make('created_at')
-                    ->label('Created Date')
-                    ->state(fn (?Location $record): string => $record?->created_at?->diffForHumans() ?? '-'),
-
-                TextEntry::make('updated_at')
-                    ->label('Last Modified Date')
-                    ->state(fn (?Location $record): string => $record?->updated_at?->diffForHumans() ?? '-'),
-            ]);
+                                TextInput::make('slug')
+                                    ->required()
+                                    ->unique(Location::class, 'slug', fn ($record) => $record),
+                            ])->columns(2),
+                        Section::make('Descriptions')
+                            ->schema([
+                                TextInput::make('short_description'),
+                                RichEditor::make('description'),
+                            ]),
+                        Section::make('Address')
+                            ->schema([
+                                TextInput::make('address')
+                                    ->columnSpanFull(),
+                                TextInput::make('city'),
+                                Select::make('state')
+                                    ->options(State::class),
+                                TextInput::make('country'),
+                            ])
+                            ->columns(3),
+                    ])->columnSpan(2),
+                Group::make()
+                    ->schema([
+                        Section::make('Status')
+                            ->schema([
+                                ToggleButtons::make('status')
+                                    ->label('Publish Location?')
+                                    ->boolean()
+                                    ->default(false)
+                                    ->grouped(),
+                            ]),
+                        Section::make('Links')
+                            ->schema([
+                                TextInput::make('url')
+                                    ->url()
+                                    ->label('Website URL'),
+                                TextInput::make('menu_url')
+                                    ->url()
+                                    ->label('Menu URL'),
+                                TextInput::make('directions_url')
+                                    ->url()
+                                    ->label('Directions URL'),
+                            ]),
+                        Section::make()
+                            ->schema([
+                                FileUpload::make('image_path')
+                                    ->label('Feature Image')
+                                    ->image()
+                                    ->directory('location-images'),
+                            ]),
+                    ]),
+            ])->columns(3);
     }
 
     public static function table(Table $table): Table
@@ -97,33 +117,11 @@ final class LocationResource extends Resource
                     ->searchable()
                     ->sortable(),
 
-                TextColumn::make('slug')
-                    ->searchable()
-                    ->sortable(),
-
-                TextColumn::make('short_description'),
-
-                TextColumn::make('description'),
-
-                TextColumn::make('address'),
-
                 TextColumn::make('city'),
 
                 TextColumn::make('state'),
 
-                TextColumn::make('zip'),
-
-                TextColumn::make('phone'),
-
-                TextColumn::make('url'),
-
-                TextColumn::make('menu_url'),
-
-                TextColumn::make('directions_url'),
-
-                ImageColumn::make('image_path'),
-
-                TextColumn::make('status'),
+                ToggleColumn::make('status'),
             ])
             ->filters([
                 TrashedFilter::make(),

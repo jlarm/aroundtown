@@ -13,7 +13,7 @@ return new class extends Migration
         Schema::create('locations', static function (Blueprint $table): void {
             $table->id();
             $table->string('name');
-            $table->string('slug');
+            $table->string('slug')->unique();
             $table->text('short_description');
             $table->text('description')->nullable();
             $table->string('address')->nullable();
