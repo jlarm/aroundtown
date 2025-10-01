@@ -14,6 +14,7 @@ final class LocationIndex extends Component
     {
         return view('livewire.location-index', [
             'locations' => Location::query()
+                ->whereStatus(true)
                 ->with('categories')
                 ->get(),
         ]);
