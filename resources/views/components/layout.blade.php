@@ -7,9 +7,14 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
 
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=abril-fatface:400" rel="stylesheet" />
+
     @vite(['resources/css/app.css', 'resources/js/app.js'])
+    @fluxAppearance()
 </head>
 <body>
     {{ $slot }}
+    @fluxScripts()
 </body>
 </html>
