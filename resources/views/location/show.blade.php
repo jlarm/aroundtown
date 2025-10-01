@@ -7,7 +7,10 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-5 mt-5">
         <div>
             @if($location->image_path)
-                <img class="aspect-3/2 object-cover rounded-2xl" src="{{ Storage::url($location->image_path) }}" alt="{{ $location->name }}">
+                <picture>
+                    <source srcset="{{ Storage::url($location->webp_image_path) }}" type="image/webp">
+                    <img class="aspect-3/2 object-cover rounded-2xl" src="{{ Storage::url($location->image_path) }}" alt="{{ $location->name }}">
+                </picture>
             @endif
         </div>
         <div class="space-y-5">
@@ -26,6 +29,7 @@
             <div>
                 @if($location->url)
                     <flux:button
+                        variant="filled"
                         :href="$location->url"
                         target="_blank"
                         icon:trailing="arrow-up-right"
@@ -35,6 +39,7 @@
                 @endif
                 @if($location->menu_url)
                         <flux:button
+                            variant="filled"
                             :href="$location->menu_url"
                             target="_blank"
                             icon:trailing="arrow-up-right"
@@ -44,6 +49,7 @@
                 @endif
                 @if($location->directions_url)
                         <flux:button
+                            variant="filled"
                             :href="$location->directions_url"
                             target="_blank"
                             icon:trailing="arrow-up-right"

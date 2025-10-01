@@ -128,7 +128,13 @@ final class LocationResource extends Resource
                                     ->label('Feature Image')
                                     ->image()
                                     ->disk('public')
-                                    ->directory('location-images'),
+                                    ->visibility('public')
+                                    ->directory('location-images')
+                                    ->imageResizeMode('cover')
+                                    ->imageCropAspectRatio('3:2')
+                                    ->imageResizeTargetWidth('1920')
+                                    ->imageResizeTargetHeight('1280')
+                                    ->storeFileNamesIn('image_original_name'),
                             ]),
                     ]),
             ])->columns(3);
